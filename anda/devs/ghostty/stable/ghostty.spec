@@ -1,6 +1,6 @@
 Name:           ghostty
 Version:        1.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A fast, native terminal emulator written in Zig.
 License:        MIT
 URL:            https://ghostty.org/
