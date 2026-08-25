@@ -13,21 +13,11 @@ License:        GPL-3.0-or-later and BSD-3-Clause and MIT
 URL:            https://github.com/TrenchBroom/TrenchBroom
 Source0:        %{url}/archive/refs/tags/v%{version}/%{name}-%{version}.tar.gz
 
-# TrenchBroom's build setup integrates vcpkg, which we do not want
-Patch:          0001-Remove-vcpkg.patch
-%if 0%{?fedora} <= 42
-# miniz didn't correctly ship cmake files so before Fedora 43 we
-# need to vendor cmake stuff
-Patch:          0002-Backport-to-older-miniz-vendor-cmake-targets.patch
-%endif
-# Build info is determined via git but we want to set it ourselves
-Patch:          0005-Set-build-info-via-options.patch
-# GLEW throws a non fatal error on init
-# https://github.com/TrenchBroom/TrenchBroom/issues/3326#issuecomment-2450099870
-Patch:          0006-Ignore-GLEW-GLX-error.patch
+#Patch:          0005-Set-build-info-via-options.patch
 
 BuildRequires:  gcc gcc-c++
 BuildRequires:  cmake
+BuildRequires:  ninja-build
 BuildRequires:  assimp-devel
 BuildRequires:  freeimage-devel
 BuildRequires:  catch-devel
@@ -52,6 +42,11 @@ TrenchBroom is a modern cross-platform level editor for Quake-engine based games
 
 %prep
 %autosetup -n TrenchBroom-%{version} -p1
+
+# It's easier than patching out vcpkg support
+# plus it will be removed next release
+mkdir -p vcpkg/scripts/buildsystems
+touch vcpkg/scripts/buildsystems/vcpkg.cmake
 
 %conf
 %cmake \
