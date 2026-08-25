@@ -1,6 +1,6 @@
 project pkg {
 	arches = ["x86_64"]
 	rpm {
-		spec = "trenchbroom.spec"
+		spec = "trenchbroom-nightly.spec"
 	}
 }

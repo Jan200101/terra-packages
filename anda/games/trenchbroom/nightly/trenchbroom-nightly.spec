@@ -4,16 +4,19 @@
 %global         VERSION_YEAR 2026
 %global         VERSION_NUMBER 2
 
-Name:           trenchbroom
-Version:        %{VERSION_YEAR}.%{VERSION_NUMBER}
-Release:        1
+%global         commit 02554982dd0635146c8a047e4a6c995afab0c453
+%global         commit_date 20260825
+%global         shortcommit %(c=%{commit}; echo ${c:0:7})
+%global         latest_stable_version %{VERSION_YEAR}.%{VERSION_NUMBER}
+
+%global         realname trenchbroom
+Name:           %{realname}-nightly
+Version:        %{latest_stable_version}^%{commit_date}git.%{shortcommit}
+Release:        1%{?dist}
 Summary:        Cross-Platform Level Editor
 
 License:        GPL-3.0-or-later and BSD-3-Clause and MIT
 URL:            https://github.com/TrenchBroom/TrenchBroom
-Source0:        %{url}/archive/refs/tags/v%{version}/%{name}-%{version}.tar.gz
-
-#Patch:          0005-Set-build-info-via-options.patch
 
 BuildRequires:  gcc gcc-c++
 BuildRequires:  cmake
@@ -37,21 +40,17 @@ BuildRequires:  xorg-x11-server-Xvfb
 
 Requires:       hicolor-icon-theme
 
+Provides:       %{realname} = %{version}
+Conflicts:      %{realname}
+
 %description
 TrenchBroom is a modern cross-platform level editor for Quake-engine based games.
 
 %prep
-%autosetup -n TrenchBroom-%{version} -p1
-
-# It's easier than patching out vcpkg support
-# plus it will be removed next release
-mkdir -p vcpkg/scripts/buildsystems
-touch vcpkg/scripts/buildsystems/vcpkg.cmake
+%git_clone %{url} %{commit}
 
 %conf
 %cmake \
-    -DBUILD_VERSION_YEAR:STRING="%{VERSION_YEAR}" \
-    -DBUILD_VERSION_NUMBER:STRING="%{VERSION_NUMBER}" \
     -DBUILD_PLATFORM_NAME:STRING="Terra" \
     -DCMAKE_PREFIX_PATH="cmake/packages;/app"
 
