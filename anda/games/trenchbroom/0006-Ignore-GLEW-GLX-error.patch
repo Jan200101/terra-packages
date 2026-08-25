@@ -1,0 +1,26 @@
+From 69b67ab796a8efea0acdc90830e29ab04cf06424 Mon Sep 17 00:00:00 2001
+From: Jan200101 <sentrycraft123@gmail.com>
+Date: Mon, 15 Sep 2025 17:16:55 +0200
+Subject: [PATCH 6/6] Ignore GLEW GLX error
+
+Signed-off-by: Jan200101 <sentrycraft123@gmail.com>
+---
+ common/src/ui/GLContextManager.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/common/src/ui/GLContextManager.cpp b/common/src/ui/GLContextManager.cpp
+index 657796679..c49940c81 100644
+--- a/common/src/ui/GLContextManager.cpp
++++ b/common/src/ui/GLContextManager.cpp
+@@ -58,7 +58,7 @@ bool GLContextManager::initialized() const
+ static void initializeGlew()
+ {
+   glewExperimental = GL_TRUE;
+-  if (const auto glewState = glewInit(); glewState != GLEW_OK)
++  if (const auto glewState = glewInit(); glewState != GLEW_OK && glewState != GLEW_ERROR_NO_GLX_DISPLAY)
+   {
+     throw RenderException{fmt::format(
+       "Error initializing glew: {}",
+-- 
+2.51.0
+
